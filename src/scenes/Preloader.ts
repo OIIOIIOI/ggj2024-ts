@@ -49,9 +49,9 @@ export class Preloader extends Scene {
     }
 
     create() {
-        this.scene.start('MainMenu');
         if (!import.meta.env.PROD)
             this.scene.start('Game');
-        // this.scene.start('GameOver');
+        else
+            this.scene.start('MainMenu');
     }
 }
