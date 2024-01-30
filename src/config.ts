@@ -25,11 +25,11 @@ export class Config {
 export class Colors {
     static BLACK_HEX: string = '#000000';
     static WHITE_HEX: string = '#FFFFFF';
-    static BACKGROUND_HEX: string = '#1d1d2e';
+    static BACKGROUND_HEX: string = '#1D1D2E';
     static DARK_HEX: string = '#097F89';
     static LIGHT_HEX: string = '#FFCD96';
     static PINK_HEX: string = '#FF7777';
-    static GOLD_HEX: string = '#c19f00';
+    static GOLD_HEX: string = '#D6A100';
 
     static SLOT_ANY_HEX: string = '#ECECEC';
     static SLOT_MIMO_HEX: string = '#FFD4D5';

@@ -169,15 +169,10 @@ export class Rewards {
                 // Validate args
                 if (rewardObject.reward.args.length != 2)
                     break;
-                // Add multiplier
-                mainQuestCard.multiplier = rewardObject.reward.args[0];
+                // Set multiplier
+                mainQuestCard.setMultiplier(rewardObject.reward.args[0], rewardObject.reward.args[1]);
                 // Init turns
                 rewardObject.turnsRemaining = rewardObject.reward.args[1];
-                // Setup end callback
-                rewardObject.endCallback = () => {
-                    // Remove multiplier
-                    mainQuestCard.multiplier = 1;
-                };
                 break;
         }
     }

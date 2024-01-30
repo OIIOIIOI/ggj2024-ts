@@ -1,17 +1,19 @@
-import { EventManager, Events } from "../managers/Events";
+import { gsap } from "gsap";
 import { Colors, Config, Fonts } from "../config";
+import { EventManager, Events } from "../managers/Events";
+import { Game } from "../scenes/Game";
 import { MainQuestStruct } from "../struct/MainQuestStruct";
 import { QuestStruct } from "../struct/QuestStruct";
-import { Dice } from "./Dice";
 import { QuestCard } from "./QuestCard";
 import { QuestSlot } from "./QuestSlot";
-import { Game } from "../scenes/Game";
-import { gsap } from "gsap";
+import { MultDisplay } from "./MultDisplay";
 
 export class MainQuestCard extends QuestCard {
     declare protected _quest: MainQuestStruct;
+    declare protected _multDisplay: MultDisplay | undefined;
 
-    public multiplier: number = 1;
+    private _multiplier: number = 1;
+    private _multiplierTurnsRemaining: number = 0;
 
     constructor(scene: Phaser.Scene, quest: QuestStruct) {
         super(scene, quest);
@@ -51,10 +53,15 @@ export class MainQuestCard extends QuestCard {
             .setOrigin(0.5, 0.5)
             .setVisible(this._facingUp);
 
+        this._multDisplay = new MultDisplay(this.scene)
+            .setPosition(165 * Config.DPR, 57 * Config.DPR)
+            .setVisible(this._facingUp);
+
         this.add([
             this._back,
             this._text,
             this._subText,
+            this._multDisplay,
         ]);
     }
 
@@ -83,8 +90,15 @@ export class MainQuestCard extends QuestCard {
             return undefined;
     }
 
-    flip() {
+    flip(instant: boolean = false) {
         super.flip(true);
+
+        this._multDisplay?.setVisible(this._facingUp && this._multiplier > 1);
+    }
+
+    // NOTE Should not need this since main quest flip is always instant, but better to anticipate it anyway
+    protected onFlipComplete(card: MainQuestCard): void {
+        card._multDisplay?.setVisible(card._facingUp && this._multiplier > 1);
     }
 
     update(time: number) {
@@ -104,9 +118,35 @@ export class MainQuestCard extends QuestCard {
 
         if (this._subText)
             this._subText.text = subtitle;
+
+        /* if (this._multDisplay) {
+            this._multDisplay.setMult(this._multiplier);
+            this._multDisplay?.setVisible(this._multiplier > 1);
+        } */
     }
 
-    onEndTurn() { }
+    onEndTurn() {
+        this._multiplierTurnsRemaining--;
+
+        if (this._multiplierTurnsRemaining <= 0) {
+            this._multiplier = 1;
+
+            // If mult display is still visible
+            if (this._multDisplay && this._multDisplay.visible) {
+                // Animate
+                gsap.to(this._multDisplay, {
+                    scale: 0,
+                    alpha: 0,
+                    rotation: -Math.PI * 0.25,
+                    duration: 0.35,
+                    ease: "power3.out",
+                    onComplete: () => {
+                        this._multDisplay?.setVisible(false);
+                    }
+                });
+            }
+        }
+    }
 
     onRequirementCompleted(uuid: string) {
         if (this._quest.isOwnRequirement(uuid)) {
@@ -117,7 +157,7 @@ export class MainQuestCard extends QuestCard {
                 // Find last dice
                 const lastDice = slot.diceHistory[slot.diceHistory.length - 1];
                 // Emit event
-                EventManager.emit(Events.MAIN_QUEST_PROGRESS, lastDice.value * this.multiplier);
+                EventManager.emit(Events.MAIN_QUEST_PROGRESS, lastDice.value * this._multiplier);
                 // Clear history
                 slot.clearHistory();
             }
@@ -135,6 +175,31 @@ export class MainQuestCard extends QuestCard {
                     ease: "elastic.out(1,0.3)",
                 });
             }
+        }
+    }
+
+    setMultiplier(mult: number, turns: number) {
+        this._multiplier = mult;
+        this._multiplierTurnsRemaining = turns;
+
+        // If mult should display and is not already visible
+        if (this._multiplier > 1 && this._multDisplay && !this._multDisplay.visible) {
+            // Set mult
+            this._multDisplay.setMult(this._multiplier);
+            // Set visible
+            this._multDisplay.setVisible(true);
+            // Animate
+            gsap.fromTo(this._multDisplay, {
+                scale: 0,
+                alpha: 0,
+                rotation: -Math.PI * 0.25,
+            }, {
+                alpha: 1,
+                scale: 1,
+                rotation: 0,
+                duration: 0.666,
+                ease: "elastic.out(1,0.4)",
+            });
         }
     }
 }

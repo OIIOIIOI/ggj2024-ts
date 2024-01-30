@@ -189,27 +189,30 @@ export class QuestCard extends Phaser.GameObjects.Container {
                 onStart: () => {
                     this.targetPosition.y = Config.questCard.startY + 250 * Config.DPR;
                 },
-                onComplete: () => {
-                    this._facingUp = !this._facingUp;
-
-                    this._back?.setTintFill(0xFFFFFF);
-
-                    this._text?.setVisible(this._facingUp);
-                    this._subText?.setVisible(this._facingUp);
-                    this._turnsCircle?.setVisible(this._facingUp);
-                    this._turnsIcon?.setVisible(this._facingUp);
-                    this._turnsText?.setVisible(this._facingUp);
-
-                    for (const slot of this._slots)
-                        slot.setVisible(this._facingUp);
-
-                    this.targetPosition.y = Config.questCard.startY;
-                },
+                onComplete: this.onFlipComplete,
+                onCompleteParams: [this],
             }).to(this, {
                 scaleX: 1,
                 scaleY: 1,
             });
         }
+    }
+
+    protected onFlipComplete(card: QuestCard) {
+        card._facingUp = !card._facingUp;
+
+        card._back?.setTintFill(0xFFFFFF);
+
+        card._text?.setVisible(card._facingUp);
+        card._subText?.setVisible(card._facingUp);
+        card._turnsCircle?.setVisible(card._facingUp);
+        card._turnsIcon?.setVisible(card._facingUp);
+        card._turnsText?.setVisible(card._facingUp);
+
+        for (const slot of card._slots)
+            slot.setVisible(card._facingUp);
+
+        card.targetPosition.y = Config.questCard.startY;
     }
 
     setPosition(x?: number | undefined, y?: number | undefined, z?: number | undefined, w?: number | undefined): this {
