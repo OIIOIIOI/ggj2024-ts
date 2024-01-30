@@ -1,6 +1,6 @@
-import { Colors, Config, Fonts } from "../config";
-import { Random } from "../managers/Random";
 import RoundRectangle from 'phaser3-rex-plugins/plugins/roundrectangle.js';
+import { Colors, Config, Fonts } from "../config";
+import { StageLockStruct } from "../struct/StageLockStruct";
 
 export class StageLock extends Phaser.GameObjects.Container {
     private _lock: StageLockStruct;
@@ -43,29 +43,5 @@ export class StageLock extends Phaser.GameObjects.Container {
 
         if (this._lock.isOpen)
             this.setVisible(false);
-    }
-}
-
-export class StageLockStruct {
-    readonly uuid: string;
-    private _questsNeeded: number;
-    private _questsDone: number;
-    public get isOpen() { return this._questsDone >= this._questsNeeded; };
-    public get remaining() { return (this._questsNeeded - this._questsDone).toFixed(); };
-
-    readonly cap: number;
-
-    constructor(questsNeeded: number, cap: number) {
-        this.uuid = Random.getInstance().uuid();
-        this._questsNeeded = questsNeeded;
-        this._questsDone = 0;
-        this.cap = cap;
-    }
-
-    updateCount(count: number = 1) {
-        this._questsDone += count;
-
-        // if (this.isOpen)
-        // console.log('lock @' + this.cap, 'is open');
     }
 }

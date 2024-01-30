@@ -28,15 +28,11 @@ export class Rewards {
         this._queue = [];
 
         // Listen to "end turn" event
-        console.log('Rewards: adding listener for end turn');
-
         this._boundOnEndTurn = this.onEndTurn.bind(this);
         EventManager.on(Events.END_TURN, this._boundOnEndTurn);
     }
 
     onEndTurn() {
-        console.log('Rewards: onEndTurn');
-
         for (const rewardObject of this._queue)
             rewardObject.turnsRemaining--;
 
@@ -53,7 +49,7 @@ export class Rewards {
 
     queue(rewards: Array<QuestReward>, quest: QuestStruct) {
         for (const reward of rewards) {
-            console.log('NEW REWARD:', reward.target, reward.type, reward.args);
+            // console.log('NEW REWARD:', reward.target, reward.type, reward.args);
 
             const rewardObject: RewardObject = {
                 reward: reward,

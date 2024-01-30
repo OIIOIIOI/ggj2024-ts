@@ -480,7 +480,7 @@ export class Game extends Scene {
     }
 
     private onQuestCompleted(uuid: string) {
-        console.log('Detected quest completed!', uuid);
+        // console.log('Detected quest completed!', uuid);
 
         // Get target quest card
         const card = this.getQuestCardByUUID(uuid);
@@ -493,13 +493,11 @@ export class Game extends Scene {
     }
 
     private onQuestFailed(uuid: string) {
-        console.log('Detected quest failed!', uuid);
+        // console.log('Detected quest failed!', uuid);
         if (this._isGameOver)
             return;
 
         if (uuid === this.mainQuestCard?.quest.uuid) {
-            console.log('GAME OVER');
-
             this.gameOver();
             return;
         }
@@ -528,7 +526,6 @@ export class Game extends Scene {
 
     private deleteQuestAndActivateNext(uuid: string, success: boolean) {
         const card = this.deleteQuestCardByUUID(uuid);
-        console.log('deleteQuestAndActivateNext', card?.uuid);
 
         if (card) {
             card.isBeingDestroyed = true;

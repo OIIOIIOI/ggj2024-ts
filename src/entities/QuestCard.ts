@@ -133,7 +133,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     activate(primed: boolean = false) {
-        console.log('Activating quest', this._quest.uuid);
+        // console.log('Activating quest', this._quest.uuid);
 
         this._quest.activate(primed);
         this.createSlots();
@@ -296,8 +296,8 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     onRequirementCompleted(uuid: string) {
-        if (this._quest.isOwnRequirement(uuid))
-            console.log('Requirement completed:', uuid, this._quest.uuid);
+        // if (this._quest.isOwnRequirement(uuid))
+        // console.log('Requirement completed:', uuid, this._quest.uuid);
 
         if (this._quest.isOwnRequirement(uuid)) {
             if (this._quest.isDone())
@@ -308,7 +308,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     destroy(fromScene?: boolean | undefined) {
-        console.log('Destroying quest', this._quest.uuid);
+        // console.log('Destroying quest', this._quest.uuid);
 
         EventManager.off(Events.REQUIREMENT_PROGRESS, this._boundOnRequirementProgress);
         EventManager.off(Events.REQUIREMENT_COMPLETED, this._boundOnRequirementCompleted);
