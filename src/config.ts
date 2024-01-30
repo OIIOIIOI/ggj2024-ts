@@ -10,11 +10,16 @@ export class Config {
     static stageBar = { width: 1200 * Config.DPR, height: 37 * Config.DPR };
     static diceSize: number = 100 * Config.DPR;
     static sceneTransitionDuration: number = 1000;
-    static stageBaseDifficulty: number = 10;//50
-    static diceRotation: number = 0.025;
-    static dicePosition: number = 8;
+    static diceRotationRandom: number = 0.05;
+    static dicePositionRandom: number = 5;
+
+    static mainQuestTurns: number = 30;//30?
+    static startingStageLevel: number = 0;// Should be 0 unless testing something
+    static stageBaseDifficulty: number = 10;
     static maxVisibleQuests: number = 3;
-    // static characterDarkenValue: number = 128;
+    static locksPerStage: number = 0;// NOTE will be added to stage level
+    static questsPerLock: number = 0;// NOTE will be added to stage level
+    static maxQuestsPerLock: number = 3;
 }
 
 export class Colors {

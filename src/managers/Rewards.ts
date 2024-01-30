@@ -12,6 +12,8 @@ export class Rewards {
     private _game: Game | undefined;
     private _queue: Array<RewardObject> = [];
 
+    private _boundOnEndTurn: (() => void) | undefined;
+
     public static getInstance(): Rewards {
         if (!Rewards.instance)
             Rewards.instance = new Rewards();
@@ -26,10 +28,15 @@ export class Rewards {
         this._queue = [];
 
         // Listen to "end turn" event
-        EventManager.on(Events.END_TURN, this.onEndTurn.bind(this));
+        console.log('Rewards: adding listener for end turn');
+
+        this._boundOnEndTurn = this.onEndTurn.bind(this);
+        EventManager.on(Events.END_TURN, this._boundOnEndTurn);
     }
 
     onEndTurn() {
+        console.log('Rewards: onEndTurn');
+
         for (const rewardObject of this._queue)
             rewardObject.turnsRemaining--;
 

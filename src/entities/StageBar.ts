@@ -1,4 +1,4 @@
-import { gsap, Bounce, Elastic } from "gsap";
+import { gsap } from "gsap";
 // import { RoughEase } from "gsap/EasePack";
 import { Colors, Config, Fonts } from "../config";
 import { EventManager, Events } from "../managers/Events";
@@ -23,6 +23,10 @@ export class StageBar extends Phaser.GameObjects.Container {
     public get stage() { return this._stage; }
     protected _totalScore: number = 0;
     public get score() { return this._totalScore; }
+
+    private _boundOnMainQuestProgress: ((value: number) => void) | undefined;
+    private _boundOnQuestCompleted: (() => void) | undefined;
+    private _boundOnVibrateLock: (() => void) | undefined;
 
     constructor(scene: Phaser.Scene) {
         super(scene);
@@ -63,15 +67,18 @@ export class StageBar extends Phaser.GameObjects.Container {
         this._totalScore = 0;
 
         // Init first stage
-        this._stageLevel = 0;
+        this._stageLevel = Config.startingStageLevel;
         this._stage = new StageStruct(this._stageLevel);
         this.resetGraphics();
 
         // Listen to quest events
-        EventManager.on(Events.MAIN_QUEST_PROGRESS, this.onMainQuestProgress.bind(this));
-        EventManager.on(Events.QUEST_COMPLETED, this.onQuestCompleted.bind(this));
+        this._boundOnMainQuestProgress = this.onMainQuestProgress.bind(this);
+        this._boundOnQuestCompleted = this.onQuestCompleted.bind(this);
+        this._boundOnVibrateLock = this.onVibrateLock.bind(this);
+        EventManager.on(Events.MAIN_QUEST_PROGRESS, this._boundOnMainQuestProgress);
+        EventManager.on(Events.QUEST_COMPLETED, this._boundOnQuestCompleted);
         // Listen to lock event
-        EventManager.on(Events.VIBRATE_LOCK, this.onVibrateLock.bind(this));
+        EventManager.on(Events.VIBRATE_LOCK, this._boundOnVibrateLock);
     }
 
     resetGraphics() {
@@ -138,10 +145,19 @@ export class StageBar extends Phaser.GameObjects.Container {
     onVibrateLock() {
         for (const lock of this._locks) {
             if (!lock.lock.isOpen) {
+                /* gsap.to(lock, {
+                    scaleX: 0.75,
+                    scaleY: 1.25,
+                    // rotation: Math.PI * 0.5,
+                    duration: 0.25,
+                    repeat: 1,
+                    yoyo: true,
+                    ease: "rough({template:none.out,strength:2,points:5,taper:none,randomize:false,clamp:false})",
+                }); */
                 gsap.from(lock, {
                     scale: 1.666,
                     duration: 1,
-                    ease: Bounce.easeOut,
+                    ease: "bounce.out",
                 });
                 break;
             }
@@ -157,9 +173,9 @@ export class StageBar extends Phaser.GameObjects.Container {
                 if (lock.lock.uuid === lockStruct.uuid) {
                     gsap.from(lock, {
                         scale: 1.5,
-                        rotation: Math.PI * 0.5,
+                        rotation: Math.PI * 1,
                         duration: 1.5,
-                        ease: Elastic.easeOut,
+                        ease: "elastic.out(1,0.3)",
                     });
                     break;
                 }
@@ -177,6 +193,14 @@ export class StageBar extends Phaser.GameObjects.Container {
 
         if (!wasComplete && this._stage.isComplete)
             EventManager.emit(Events.STAGE_COMPLETED);
+    }
+
+    destroy(fromScene?: boolean | undefined) {
+        EventManager.off(Events.MAIN_QUEST_PROGRESS, this._boundOnMainQuestProgress);
+        EventManager.off(Events.QUEST_COMPLETED, this._boundOnQuestCompleted);
+        EventManager.off(Events.VIBRATE_LOCK, this._boundOnVibrateLock);
+
+        super.destroy();
     }
 }
 
@@ -229,18 +253,21 @@ export class StageStruct {
     }
 
     setupLocks() {
-        const count = this._level + 1;
-        const extra = 1;//2
+        const locksCount = Config.locksPerStage + this._level;
+        const questsPerLock = Math.min(Config.questsPerLock + this._level, Config.maxQuestsPerLock);
+
+        console.log('setup locks:', this._level, locksCount, questsPerLock);
+
 
         // Add the progress locks
-        if (count > 1) {
-            const step = Math.floor(this._total / count);
-            for (let i = 1; i < count; i++)
-                this._locks.push(new StageLockStruct(this._level + extra, step * i));
+        if (locksCount > 1) {
+            const step = Math.floor(this._total / locksCount);
+            for (let i = 1; i < locksCount; i++)
+                this._locks.push(new StageLockStruct(questsPerLock, step * i));
         }
 
         // Add the last lock
-        this._locks.push(new StageLockStruct(this._level + extra, this._total));
+        this._locks.push(new StageLockStruct(questsPerLock, this._total));
     }
 
     public isLockedAndMaxed() {

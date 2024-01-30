@@ -6,7 +6,7 @@ import { Dice } from "./Dice";
 import { QuestCard } from "./QuestCard";
 import { QuestSlot } from "./QuestSlot";
 import { Game } from "../scenes/Game";
-import { gsap, Power3, Elastic } from "gsap";
+import { gsap } from "gsap";
 
 export class MainQuestCard extends QuestCard {
     declare protected _quest: MainQuestStruct;
@@ -96,7 +96,7 @@ export class MainQuestCard extends QuestCard {
         const gameScene = this.scene.scene.get("Game") as Game;
         if (gameScene.stageBar?.stage.isLockedAndMaxed()) {
             title = "No more Quick Jokes!";
-            subtitle = "The crowd wants some Honed Bits.";
+            subtitle = "The crowd wants some Refined Bits.";
         }
 
         if (this._text)
@@ -132,7 +132,7 @@ export class MainQuestCard extends QuestCard {
                     rotation: `${(Math.random() * Math.PI * 0.2) - Math.PI * 0.1}`,
                     scale: 1,
                     duration: 2,
-                    ease: Elastic.easeOut,
+                    ease: "elastic.out(1,0.3)",
                 });
             }
         }

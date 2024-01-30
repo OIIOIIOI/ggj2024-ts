@@ -65,7 +65,7 @@ export class StageLockStruct {
     updateCount(count: number = 1) {
         this._questsDone += count;
 
-        if (this.isOpen)
-            console.log('lock @' + this.cap, 'is open');
+        // if (this.isOpen)
+        // console.log('lock @' + this.cap, 'is open');
     }
 }

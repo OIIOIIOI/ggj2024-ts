@@ -82,7 +82,7 @@ export class Char extends Phaser.GameObjects.Container {
         gsap.to(this, {
             y: destY,
             duration: 0.35,
-            ease: Power3.easeOut,
+            ease: "power3.out",
             onUpdate: function (body, color) {
                 if (!body) return;
                 const p = Power3.easeOut(this.progress());
@@ -103,7 +103,7 @@ export class Char extends Phaser.GameObjects.Container {
         gsap.to(this, {
             y: this._basePosition.y,
             duration: 0.35,
-            ease: Power3.easeOut,
+            ease: "power3.out",
             onUpdate: function (body, color) {
                 if (!body) return;
                 const p = 1 - Power3.easeOut(this.progress());

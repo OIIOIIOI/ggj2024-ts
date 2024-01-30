@@ -1,4 +1,4 @@
-import { gsap, Elastic } from "gsap";
+import { gsap } from "gsap";
 import { Colors, Config, Fonts } from "../config";
 import { EventManager, Events } from "../managers/Events";
 
@@ -66,13 +66,13 @@ export class FameDisplay extends Phaser.GameObjects.Container {
         gsap.from(this._icon, {
             scale: 0.85,
             duration: 1.5,
-            ease: Elastic.easeOut,
+            ease: "elastic.out(1,0.3)",
         });
 
         gsap.from(this._score, {
             scale: 1.35,
             duration: 1.5,
-            ease: Elastic.easeOut,
+            ease: "elastic.out(1,0.3)",
         });
     }
 

@@ -4,7 +4,7 @@ import { QuestStruct } from "../struct/QuestStruct";
 import { QuestSlot } from "./QuestSlot";
 import { QuestReward } from "../struct/QuestReward";
 import { Random } from "../managers/Random";
-import { gsap, Power3, Elastic } from "gsap";
+import { gsap } from "gsap";
 import { lerp } from "../utils";
 import { Rewards } from "../managers/Rewards";
 
@@ -133,6 +133,8 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     activate(primed: boolean = false) {
+        console.log('Activating quest', this._quest.uuid);
+
         this._quest.activate(primed);
         this.createSlots();
 
@@ -178,14 +180,14 @@ export class QuestCard extends Phaser.GameObjects.Container {
                 delay: 0.35,
                 defaults: {
                     duration: 0.4,
-                    ease: Power3.easeOut,
+                    ease: "power3.out",
                 }
             });
             timeline.to(this, {
                 scaleX: 1.1,
                 scaleY: 0,
                 onStart: () => {
-                    this.targetPosition.y += 250;
+                    this.targetPosition.y = Config.questCard.startY + 250 * Config.DPR;
                 },
                 onComplete: () => {
                     this._facingUp = !this._facingUp;
@@ -201,7 +203,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
                     for (const slot of this._slots)
                         slot.setVisible(this._facingUp);
 
-                    this.targetPosition.y -= 250;
+                    this.targetPosition.y = Config.questCard.startY;
                 },
             }).to(this, {
                 scaleX: 1,
@@ -272,7 +274,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
             gsap.to(this._turnsIcon, {
                 rotation: `-=${Math.PI}`,
                 duration: 1.5,
-                ease: Elastic.easeOut,
+                ease: "elastic.out(1,0.3)",
             });
         }
 
@@ -280,7 +282,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
             gsap.from(this._turnsText, {
                 scale: 1.35,
                 duration: 1.5,
-                ease: Elastic.easeOut,
+                ease: "elastic.out(1,0.3)",
             });
         }
     }
@@ -294,8 +296,8 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     onRequirementCompleted(uuid: string) {
-        // if (this._quest.isOwnRequirement(uuid))
-        // console.log('Requirement completed:', uuid);
+        if (this._quest.isOwnRequirement(uuid))
+            console.log('Requirement completed:', uuid, this._quest.uuid);
 
         if (this._quest.isOwnRequirement(uuid)) {
             if (this._quest.isDone())
@@ -306,7 +308,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     destroy(fromScene?: boolean | undefined) {
-        // console.log('destroying quest card');
+        console.log('Destroying quest', this._quest.uuid);
 
         EventManager.off(Events.REQUIREMENT_PROGRESS, this._boundOnRequirementProgress);
         EventManager.off(Events.REQUIREMENT_COMPLETED, this._boundOnRequirementCompleted);

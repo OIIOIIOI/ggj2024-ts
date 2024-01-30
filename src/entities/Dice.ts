@@ -6,7 +6,7 @@ import { CharType } from "../struct/CharStruct";
 import { DiceStruct } from "../struct/DiceStruct";
 import { ilerp, lerp } from "../utils";
 import { QuestSlot } from "./QuestSlot";
-import { gsap, Power3, Elastic, Bounce } from 'gsap';
+import { gsap } from 'gsap';
 
 export class Dice extends Phaser.GameObjects.Container {
     // Actual dice class
@@ -159,9 +159,9 @@ export class Dice extends Phaser.GameObjects.Container {
         gsap.to(this, {
             scaleX: 1.2,
             scaleY: 1.2,
-            rotation: Math.PI * (Math.random() * Config.diceRotation * 2 - Config.diceRotation),
+            rotation: Math.PI * (Math.random() * Config.diceRotationRandom * 2 - Config.diceRotationRandom),
             duration: 0.65,
-            ease: Elastic.easeOut,
+            ease: "elastic.out(1,0.3)",
             overwrite: true,
         });
     }
@@ -183,7 +183,7 @@ export class Dice extends Phaser.GameObjects.Container {
             scaleY: 1,
             rotation: this.rotation * 0.5,
             duration: 0.5,
-            ease: Bounce.easeOut,
+            ease: "bounce.out",
             overwrite: true,
         })
     }
@@ -206,7 +206,7 @@ export class Dice extends Phaser.GameObjects.Container {
                 scaleY: 1,
                 rotation: 0,
                 duration: 0.2,
-                ease: Power3.easeOut,
+                ease: "power3.out",
                 overwrite: true,
                 onStart: () => {
                     if (this.input)
@@ -234,7 +234,7 @@ export class Dice extends Phaser.GameObjects.Container {
             scaleY: 1,
             rotation: this.rotation * 0.5,
             duration: 0.2,
-            ease: Power3.easeOut,
+            ease: "power3.out",
             overwrite: true,
             onStart: () => {
                 if (this.input)
