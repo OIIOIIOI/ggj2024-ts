@@ -6,6 +6,7 @@ import { Dice } from "./Dice";
 import { clamp } from "../utils";
 import DissolvePipelinePlugin from "phaser3-rex-plugins/plugins/dissolvepipeline-plugin";
 import { Game } from "../scenes/Game";
+import { GlitchedDice } from "./GlitchedDice";
 
 export class QuestSlot extends Phaser.GameObjects.Container {
     protected _zone: Phaser.GameObjects.Zone;
@@ -173,6 +174,10 @@ export class QuestSlot extends Phaser.GameObjects.Container {
 
     isDiceValid(dice: Dice) {
         if (this._belongsToMainQuest) {
+            // Reject glitched dice
+            if ("glitched" in dice)
+                return false;
+
             const gameScene = this.scene.scene.get("Game") as Game;
             if (gameScene.stageBar?.stage.isLockedAndMaxed())
                 return false;
@@ -212,7 +217,7 @@ export class QuestSlot extends Phaser.GameObjects.Container {
                 break;
         }
 
-        return isTypeValid && isValueValid;
+        return "glitched" in dice || (isTypeValid && isValueValid);
     }
 
     protected isFirstOfAll() {

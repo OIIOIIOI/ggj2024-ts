@@ -10,17 +10,17 @@ import { gsap } from 'gsap';
 
 export class Dice extends Phaser.GameObjects.Container {
     // Actual dice class
-    private _dice: DiceStruct;
+    protected _dice: DiceStruct;
     public get dice() { return this._dice; }
 
     // Graphics objects
-    private _background: Phaser.GameObjects.Sprite | undefined;
-    private _dots: Phaser.GameObjects.Sprite | undefined;
-    private _text: Phaser.GameObjects.Text | undefined;
+    protected _background: Phaser.GameObjects.Sprite | undefined;
+    protected _dots: Phaser.GameObjects.Sprite | undefined;
+    protected _text: Phaser.GameObjects.Text | undefined;
 
-    private _shiftKey: Phaser.Input.Keyboard.Key | undefined;
-    private _isBeingDragged = false;
-    private _dragPosition = new Phaser.Geom.Point(0, 0);
+    protected _shiftKey: Phaser.Input.Keyboard.Key | undefined;
+    protected _isBeingDragged = false;
+    protected _dragPosition = new Phaser.Geom.Point(0, 0);
     public tweenStartPosition = new Phaser.Geom.Point(0, 0);
 
     constructor(scene: Phaser.Scene, dice: DiceStruct) {
@@ -130,9 +130,8 @@ export class Dice extends Phaser.GameObjects.Container {
                 lerp(this.y, this._dragPosition.y, positionSpeed)
             );
         }
-        else {
+        else
             this._dragPosition.setTo(this.x, this.y);
-        }
     }
 
     onPointerDown(pointer: Phaser.Input.Pointer, localX: number, localY: number, event: Phaser.Types.Input.EventData) {
@@ -247,7 +246,7 @@ export class Dice extends Phaser.GameObjects.Container {
         });
     }
 
-    private isValidTarget(target: Phaser.GameObjects.GameObject) {
+    protected isValidTarget(target: Phaser.GameObjects.GameObject) {
         // Check if target is a Zone, has a parent and parent is a Slot
         return target instanceof Phaser.GameObjects.Zone &&
             target.parentContainer &&

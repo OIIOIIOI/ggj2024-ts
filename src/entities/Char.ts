@@ -4,6 +4,7 @@ import { CharStruct, CharType } from "../struct/CharStruct";
 import { Dice } from "./Dice";
 import { Colors, Config } from "../config";
 import { lerp } from "../utils";
+import { GlitchedDice } from "./GlitchedDice";
 
 export class Char extends Phaser.GameObjects.Container {
     // Actual char class
@@ -57,7 +58,9 @@ export class Char extends Phaser.GameObjects.Container {
 
         // Add dice
         this.addDice(2);
+        // this.addGlitchedDice();
 
+        // Listen to pick-up/drop events
         this._boundOnDicePickedUp = this.onDicePickedUp.bind(this);
         this._boundOnDiceDropped = this.onDiceDropped.bind(this);
         EventManager.on(Events.DICE_PICKED_UP, this._boundOnDicePickedUp);
@@ -144,6 +147,14 @@ export class Char extends Phaser.GameObjects.Container {
         for (const dice of oldDice)
             dice.destroy();
         this.diceEntities = this.diceEntities.filter((dice) => !oldUUIDs.includes(dice.dice.uuid));
+    }
+
+    addGlitchedDice() {
+        // Add to dice to pool
+        const newDice = this._char.addDice(1);
+        // Create the new dice entities
+        for (const diceStruct of newDice)
+            this.diceEntities.push(new GlitchedDice(this.scene, diceStruct));
     }
 
     destroy() {
