@@ -5,17 +5,12 @@ export class CharStruct {
     readonly uuid: string;
     readonly type: CharType;
 
-    private _dicePool: Array<DiceStruct>;
+    private _dicePool: Array<DiceStruct> = [];
     public get dicePool() { return this._dicePool; }
 
     constructor(type: CharType) {
         this.uuid = Random.getInstance().uuid();
         this.type = type;
-
-        this._dicePool = [
-            new DiceStruct(this.type),
-            new DiceStruct(this.type),
-        ];
     }
 
     addDice(n: number) {

@@ -319,24 +319,37 @@ export class Game extends Scene {
         });
 
         for (const char of this._chars) {
-            let diceWidth = Config.diceSize * char.diceEntities.length + Config.diceSize * 0.25 * (char.diceEntities.length - 1);
+            const spacing = Config.diceSize * 1.25;
+            let diceWidth = Config.diceSize * Math.min(char.diceEntities.length, 3) + Config.diceSize * 0.25 * (char.diceEntities.length - 1);
             let startX = char.x + Config.diceSize / 2 - diceWidth / 2;
+            let startY = Config.screen.height - spacing * 0.666;
 
             for (let i = 0; i < char.diceEntities.length; i++) {
                 const dice = char.diceEntities[i];
+                // Get destination rotation
+                const destRotation = Math.PI * Random.getInstance().floatInRange(-Config.diceRotationRandom, Config.diceRotationRandom, true);
+                // Get destination x
+                let destX = startX + (i % 3) * spacing + (Math.floor(i / 3) % 2) * 0.5 * spacing;
+                // Get destination y
+                let destY = startY - Math.floor(i / 3) * spacing;
+
+                // Add random
+                destX += Random.getInstance().floatInRange(-Config.dicePositionRandom, Config.dicePositionRandom, true);
+                destY += Random.getInstance().floatInRange(-Config.dicePositionRandom, Config.dicePositionRandom, true);
+                // Animate
                 timeline.fromTo(
                     dice,
                     // Start values
                     {
-                        x: startX + i * Config.diceSize * 1.25,
-                        y: Config.screen.height + Config.diceSize * 0.75,
+                        x: startX + i * spacing,
+                        y: Config.screen.height + spacing,
                         rotation: Math.PI,
                     },
                     // End values
                     {
-                        x: startX + i * Config.diceSize * 1.25 + Math.random() * Config.dicePositionRandom * 2 - Config.dicePositionRandom,
-                        y: Config.screen.height - Config.diceSize + Math.random() * Config.dicePositionRandom * 2 - Config.dicePositionRandom,
-                        rotation: Math.PI * (Math.random() * Config.diceRotationRandom * 2 - Config.diceRotationRandom),
+                        x: destX,
+                        y: destY,
+                        rotation: destRotation,
                         onStart: () => {
                             this._diceLayer?.add(dice);
                             dice.setVisible(true);

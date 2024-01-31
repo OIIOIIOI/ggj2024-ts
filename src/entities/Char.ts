@@ -55,9 +55,8 @@ export class Char extends Phaser.GameObjects.Container {
             this._body,
         ]);
 
-        // Create the dice entities from this char's dice pool
-        for (const dice of this._char.dicePool)
-            this.diceEntities.push(new Dice(this.scene, dice));
+        // Add dice
+        this.addDice(2);
 
         this._boundOnDicePickedUp = this.onDicePickedUp.bind(this);
         this._boundOnDiceDropped = this.onDiceDropped.bind(this);
@@ -118,16 +117,13 @@ export class Char extends Phaser.GameObjects.Container {
     }
 
     update() {
-        for (let i = 0; i < this.diceEntities.length; i++) {
-            const dice = this.diceEntities[i];
+        for (const dice of this.diceEntities)
             dice.update();
-        }
     }
 
     throwAllDice() {
-        for (let i = 0; i < this._char.dicePool.length; i++) {
-            const dice = this._char.dicePool[i];
-            dice.throw();
+        for (const diceStruct of this._char.dicePool) {
+            diceStruct.throw();
         }
     }
 
@@ -135,17 +131,17 @@ export class Char extends Phaser.GameObjects.Container {
         // Add to dice to pool
         const newDice = this._char.addDice(n);
         // Create the new dice entities
-        for (const dice of newDice)
-            this.diceEntities.push(new Dice(this.scene, dice));
+        for (const diceStruct of newDice)
+            this.diceEntities.push(new Dice(this.scene, diceStruct));
     }
 
     removeDice(n: number) {
         // Remove dice from pool
-        const oldDice = this._char.removeDice(n);
+        const oldDiceStruct = this._char.removeDice(n);
         // Delete the old dice entities
-        const oldUUIDs = oldDice.map((dice) => dice?.uuid);
-        const oldDiceEntities = this.diceEntities.filter((dice) => oldUUIDs.includes(dice.dice.uuid));
-        for (const dice of oldDiceEntities)
+        const oldUUIDs = oldDiceStruct.map((dice) => dice?.uuid);
+        const oldDice = this.diceEntities.filter((dice) => oldUUIDs.includes(dice.dice.uuid));
+        for (const dice of oldDice)
             dice.destroy();
         this.diceEntities = this.diceEntities.filter((dice) => !oldUUIDs.includes(dice.dice.uuid));
     }
