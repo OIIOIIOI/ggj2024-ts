@@ -157,6 +157,9 @@ export class QuestSlot extends Phaser.GameObjects.Container {
     }
 
     update() {
+        if (!this.visible)
+            return;
+
         this._text.text = this.getRequirementValue();
         this._subText.text = this.getRequirementText();
         this._check.setVisible(this._requirement.done);

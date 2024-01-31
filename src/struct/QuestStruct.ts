@@ -67,7 +67,7 @@ export class QuestStruct {
         return q;
     }
 
-    activate(primed: boolean = false) {
+    setupDynamicRequirements() {
         // Setup dynamic requirements
         const randomTypeReqs = [];
         for (const req of this._requirements) {
@@ -82,7 +82,9 @@ export class QuestStruct {
         // Pick a different random CharType for each requirement
         if (randomTypeReqs.length > 0)
             this.pickRandomTypes(randomTypeReqs);
+    }
 
+    activate(primed: boolean = false) {
         // Prime if necessary
         this.isPrimed = primed;
 

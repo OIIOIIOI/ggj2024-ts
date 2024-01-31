@@ -13,7 +13,7 @@ export class GlitchedDice extends Dice {
     createGraphics(): void {
         super.createGraphics();
 
-        const frameRate = 12;
+        const frameRate = 10;
         let frames = [
             { key: 'ui', frame: 'Dice_Barde_UI_1.png', duration: 0 },
             { key: 'ui', frame: 'Dice_Poet_UI_1.png', duration: 0 },

@@ -7,6 +7,8 @@ import { Random } from "../managers/Random";
 import { gsap } from "gsap";
 import { lerp } from "../utils";
 import { Rewards } from "../managers/Rewards";
+import { CharType } from "../struct/CharStruct";
+import { QuestRequirement } from "../struct/QuestRequirement";
 
 export class QuestCard extends Phaser.GameObjects.Container {
     // Actual quest class
@@ -43,6 +45,9 @@ export class QuestCard extends Phaser.GameObjects.Container {
 
         this._quest = quest;
 
+        // Setup dynamic requirements
+        this._quest.setupDynamicRequirements();
+
         // Create graphics
         this.createGraphics();
 
@@ -51,7 +56,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     createGraphics() {
-        this._back = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'ui', 'Carte_Special.png');
+        this._back = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'ui', this.getBackSprite());
 
         this._text = new Phaser.GameObjects.Text(
             this.scene,
@@ -114,9 +119,42 @@ export class QuestCard extends Phaser.GameObjects.Container {
         ]);
     }
 
+    getBackSprite() {
+        // List types from requirements
+        const types: Map<CharType, QuestRequirement> = new Map();
+        for (const requirement of this._quest.requirements) {
+            if (!types.has(requirement.type))
+                types.set(requirement.type, requirement);
+        }
+        // All three types
+        if (types.has(CharType.BARD) && types.has(CharType.MIMO) && types.has(CharType.POET))
+            return 'Carte_Special.png';
+        // Bard / Mimo
+        else if (types.has(CharType.BARD) && types.has(CharType.MIMO))
+            return 'Carte_Mimo_Barde.png';
+        // Bard / Poet
+        else if (types.has(CharType.BARD) && types.has(CharType.POET))
+            return 'Carte_Barde_Poet.png';
+        // Poet / Mimo
+        else if (types.has(CharType.POET) && types.has(CharType.MIMO))
+            return 'Carte_Mimo_Poet.png';
+        // Bard
+        else if (types.has(CharType.BARD))
+            return 'Carte_Barde.png';
+        // Mimo
+        else if (types.has(CharType.MIMO))
+            return 'Carte_Mimo.png';
+        // Poet
+        else if (types.has(CharType.POET))
+            return 'Carte_Poet.png';
+        // Default
+        else
+            return 'Carte_Malus.png';// TODO Replace with standard card back when asset is ready
+    }
+
     createSlots() {
-        for (let i = 0; i < this._quest.requirements.length; i++) {
-            const slot = new QuestSlot(this.scene, this._quest.requirements[i], this._quest.requirements)
+        for (const requirement of this._quest.requirements) {
+            const slot = new QuestSlot(this.scene, requirement, this._quest.requirements)
                 .setVisible(this._facingUp);
             this._slots.push(slot);
         }
@@ -135,7 +173,10 @@ export class QuestCard extends Phaser.GameObjects.Container {
     activate(primed: boolean = false) {
         // console.log('Activating quest', this._quest.uuid);
 
+        // Activate quest
         this._quest.activate(primed);
+
+        // Create slots
         this.createSlots();
 
         // Update texts
@@ -228,17 +269,13 @@ export class QuestCard extends Phaser.GameObjects.Container {
         if (this.isBeingDestroyed)
             return;
 
-        /* if (this._text)
-            this._text.text = this._quest.name; */
-
-        /* if (this._subText) {
-            let s = "";
-            if (this._quest.rewardsForSuccess.length > 0)
-                s = "Success: " + this._quest.rewardsForSuccess.map((r) => Rewards.getInstance().getRewardText(r)).join(", ");
-            else if (this._quest.rewardsForFail.length > 0)
-                s = "Fail: " + this._quest.rewardsForFail.map((r) => r.type).join(", ");
-            this._subText.text = s;
-        } */
+        if (this._quest.isPrimed) {
+            this._turnsIcon?.setAlpha(1);
+            this._turnsText?.setAlpha(1);
+        } else {
+            this._turnsIcon?.setAlpha(0.5);
+            this._turnsText?.setAlpha(0.5);
+        }
 
         if (this._turnsText)
             this._turnsText.text = this.turnsRemaining.toFixed();
