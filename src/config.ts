@@ -20,6 +20,8 @@ export class Config {
     static locksPerStage: number = 0;// NOTE will be added to stage level
     static questsPerLock: number = 0;// NOTE will be added to stage level
     static maxQuestsPerLock: number = 3;
+
+    static discordWebhook: string = import.meta.env.VITE_DISCORD_WEBHOOK || "";
 }
 
 export class Colors {

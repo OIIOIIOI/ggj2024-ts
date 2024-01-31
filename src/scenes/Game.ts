@@ -19,6 +19,7 @@ import { Audience } from '../entities/Audience';
 import { TurnsDisplay } from '../entities/TurnsDisplay';
 import { FameDisplay } from '../entities/FameDisplay';
 import { Button } from '../entities/Button';
+import { logToDiscord } from '../utils';
 
 export class Game extends Scene {
     static score: number = 0;
@@ -81,6 +82,8 @@ export class Game extends Scene {
     preload() { }
 
     create() {
+        logToDiscord("Starting new game!");
+
         Game.score = 0;
         Game.preventAllInteractions = true;
 
