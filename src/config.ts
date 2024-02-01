@@ -13,7 +13,7 @@ export class Config {
     static diceRotationRandom: number = 0.05;
     static dicePositionRandom: number = 5;
 
-    static mainQuestTurns: number = 30;//30?
+    static mainQuestTurns: number = import.meta.env.PROD ? 30 : 3;//30?
     static startingStageLevel: number = 0;// Should be 0 unless testing something
     static stageBaseDifficulty: number = 10;
     static maxVisibleQuests: number = 3;

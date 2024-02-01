@@ -26,6 +26,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
     protected _text: Phaser.GameObjects.Text | undefined;
     protected _subText: Phaser.GameObjects.Text | undefined;
     protected _slots: Array<QuestSlot> = [];
+    public get slots() { return this._slots; }
     protected _turnsText: Phaser.GameObjects.Text | undefined;
     protected _turnsIcon: Phaser.GameObjects.Image | undefined;
     protected _turnsCircle: Phaser.GameObjects.Ellipse | undefined;

@@ -22,6 +22,7 @@ import { Button } from '../entities/Button';
 import { logToDiscord } from '../utils';
 
 export class Game extends Scene {
+    static uuid: string = '';
     static score: number = 0;
     static preventAllInteractions: boolean = true;
     static firstTimeUsedDice = 0;
@@ -54,6 +55,7 @@ export class Game extends Scene {
     private _turnsDisplay: TurnsDisplay | undefined;
     private _bitsTitle: Phaser.GameObjects.Text | undefined;
     private _jokesTitle: Phaser.GameObjects.Text | undefined;
+    private _bugReportButton: Button | undefined;
 
     public mask: Phaser.GameObjects.Rectangle | undefined;
 
@@ -82,8 +84,6 @@ export class Game extends Scene {
     preload() { }
 
     create() {
-        logToDiscord("Starting new game!");
-
         Game.score = 0;
         Game.preventAllInteractions = true;
 
@@ -145,7 +145,7 @@ export class Game extends Scene {
             .setRotation(Math.PI * 0.5);
 
         // End turn button
-        this._endTurnButton = new Button(this, "End turn", 38, Colors.WHITE_HEX, Colors.CHECK_BARD)
+        this._endTurnButton = new Button(this, "End turn", 38, Fonts.MAIN, Colors.WHITE_HEX, Colors.WHITE)
             .setPosition(Config.screen.width - 120 * Config.DPR, Config.screen.height - 60 * Config.DPR)
             .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
                 if (Game.preventAllInteractions)
@@ -154,7 +154,7 @@ export class Game extends Scene {
             });
 
         // Use all dice button
-        this._useAllDiceButton = new Button(this, "Use all dice", 38, Colors.WHITE_HEX, Colors.CHECK_BARD)
+        this._useAllDiceButton = new Button(this, "Use all dice", 38, Fonts.MAIN, Colors.WHITE_HEX, Colors.WHITE)
             .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
                 if (Game.preventAllInteractions)
                     return;
@@ -165,6 +165,23 @@ export class Game extends Scene {
         this._stageBar = new StageBar(this)
             .setPosition(Config.screen.width * 0.5, 80 * Config.DPR);
 
+        // Bug report button
+        this._bugReportButton = new Button(this, "Send Bug Report", 18, Fonts.TEXT, Colors.WHITE_HEX, Colors.BLACK, 0.666)
+            .setPosition(95 * Config.DPR, Config.screen.height - 28 * Config.DPR)
+            .on(Phaser.Input.Events.GAMEOBJECT_POINTER_DOWN, () => {
+                const quests = this._questUUIDHistory;
+                let s = ":beetle: **Bug report!**";
+                s += "\nQuests:";
+                this._questCards.forEach((q) => {
+                    s += "\n`" + q.quest.uuid + "` **(" + q.quest.name + ")**" + ` ${q.quest.isPrimed ? ':white_check_mark: Primed' : ':negative_squared_cross_mark: Not primed'} :hourglass: ${q.quest.turnsRemaining} :white_square_button: ${q.slots.length}`;
+                });
+                s += "\nQuests History:";
+                this._questUUIDHistory?.forEach((value, key) => {
+                    s += "\n`" + key + "` **(" + value + ")**";
+                });
+                logToDiscord(s);
+            });
+
         // Add to UI layer
         this._uiLayer.add([
             this._bitsTitle,
@@ -174,6 +191,7 @@ export class Game extends Scene {
             this._useAllDiceButton,
             this._endTurnButton,
             this._stageBar,
+            this._bugReportButton,
         ]);
 
         // Audience
@@ -233,6 +251,10 @@ export class Game extends Scene {
         this._mainQuestCard = new MainQuestCard(this, mainQuest)
             .setPosition(Config.screen.width * 0.785, Config.questCard.startY);
         this._questsLayer?.add(this._mainQuestCard);
+
+        // Log start
+        Game.uuid = this._mainQuestCard.quest.uuid;
+        logToDiscord(`Starting new game! (${Game.uuid})`);
 
         // Place button
         this._useAllDiceButton.setPosition(this._mainQuestCard.x, this._mainQuestCard.y + 210 * Config.DPR);

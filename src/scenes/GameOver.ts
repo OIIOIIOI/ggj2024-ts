@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { Colors, Config, Fonts } from '../config';
 import { Game } from './Game';
+import { logToDiscord } from '../utils';
 
 export class GameOver extends Scene {
     constructor() {
@@ -8,6 +9,8 @@ export class GameOver extends Scene {
     }
 
     create() {
+        logToDiscord(`Score: ${Game.score.toFixed()} (${Game.uuid})`);
+
         this.add.image(0, 0, 'screens', 'ScreenOutro_UI.png').setOrigin(0, 0);
 
         this.add.text(

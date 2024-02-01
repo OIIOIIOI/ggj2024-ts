@@ -6,7 +6,7 @@ export class Button extends Phaser.GameObjects.Container {
     protected _label: Phaser.GameObjects.Text;
     protected _enabled: boolean;
 
-    constructor(scene: Phaser.Scene, text: string, fontSize: number, color: string, bgColor: number) {
+    constructor(scene: Phaser.Scene, text: string, fontSize: number, font: string, color: string, bgColor: number = Colors.WHITE, bgAlpha: number = 0.35) {
         super(scene);
 
         this._label = new Phaser.GameObjects.Text(
@@ -23,7 +23,7 @@ export class Button extends Phaser.GameObjects.Container {
             0, 0,
             this._label.width + 40 * Config.DPR, this._label.height + 15 * Config.DPR,
             10,
-            Colors.WHITE, 0.35
+            bgColor, bgAlpha
         );
 
         this.add([
