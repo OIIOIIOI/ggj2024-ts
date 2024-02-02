@@ -48,7 +48,9 @@ export class MainQuestCard extends QuestCard {
             this.scene,
             0, 0,
             'ui',
-            'Picto_Smile.png',
+            'Picto_Normal.png',
+            // 'Picto_Smile.png',
+            // 'Picto_Suspicious.png',
         )
             .setOrigin(0.5, 0.5)
             .setVisible(this._facingUp);
@@ -111,6 +113,13 @@ export class MainQuestCard extends QuestCard {
         if (gameScene.stageBar?.stage.isLockedAndMaxed()) {
             title = "No more Quick Jokes!";
             subtitle = "The crowd wants some Refined Bits.";
+            // Set frame if needed
+            if (this._turnsIcon?.frame.name != 'Picto_Suspicious.png')
+                this._turnsIcon?.setFrame('Picto_Suspicious.png');
+        }
+        // Reset frame if needed
+        else if (this._turnsIcon?.frame.name === 'Picto_Suspicious.png') {
+            this._turnsIcon?.setFrame('Picto_Normal.png');
         }
 
         if (this._text)
@@ -165,14 +174,18 @@ export class MainQuestCard extends QuestCard {
             this._quest.undoRequirements();
 
             if (this._turnsIcon) {
+                this._turnsIcon.setFrame('Picto_Smile.png');
                 gsap.fromTo(this._turnsIcon, {
-                    rotation: `${(Math.random() * Math.PI * 0.4) - Math.PI * 0.2}`,
+                    rotation: `${(Math.random() * Math.PI * 0.2) - Math.PI * 0.1}`,
                     scale: 1.5,
                 }, {
                     rotation: `${(Math.random() * Math.PI * 0.2) - Math.PI * 0.1}`,
                     scale: 1,
-                    duration: 2,
-                    ease: "elastic.out(1,0.3)",
+                    duration: 1.5,
+                    ease: "elastic.out(1.2,0.3)",
+                    onComplete: () => {
+                        this._turnsIcon?.setFrame('Picto_Normal.png');
+                    }
                 });
             }
         }

@@ -493,27 +493,6 @@
 					}
 				},
 				{
-					"filename": "Select_Open.png",
-					"rotated": false,
-					"trimmed": false,
-					"sourceSize": {
-						"w": 59,
-						"h": 79
-					},
-					"spriteSourceSize": {
-						"x": 0,
-						"y": 0,
-						"w": 59,
-						"h": 79
-					},
-					"frame": {
-						"x": 1566,
-						"y": 531,
-						"w": 59,
-						"h": 79
-					}
-				},
-				{
 					"filename": "Picto_Smile.png",
 					"rotated": false,
 					"trimmed": false,
@@ -532,6 +511,48 @@
 						"y": 445,
 						"w": 78,
 						"h": 66
+					}
+				},
+				{
+					"filename": "ValeurDice_6.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 101,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 14,
+						"w": 75,
+						"h": 72
+					},
+					"frame": {
+						"x": 1566,
+						"y": 531,
+						"w": 75,
+						"h": 72
+					}
+				},
+				{
+					"filename": "ValeurDice_5.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 100,
+						"h": 100
+					},
+					"spriteSourceSize": {
+						"x": 13,
+						"y": 14,
+						"w": 74,
+						"h": 72
+					},
+					"frame": {
+						"x": 1643,
+						"y": 507,
+						"w": 74,
+						"h": 72
 					}
 				},
 				{
@@ -556,27 +577,6 @@
 					}
 				},
 				{
-					"filename": "ValeurDice_6.png",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 101,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 13,
-						"y": 14,
-						"w": 75,
-						"h": 72
-					},
-					"frame": {
-						"x": 1629,
-						"y": 507,
-						"w": 75,
-						"h": 72
-					}
-				},
-				{
 					"filename": "ValeurDice_2.png",
 					"rotated": false,
 					"trimmed": true,
@@ -591,52 +591,31 @@
 						"h": 70
 					},
 					"frame": {
-						"x": 1627,
+						"x": 1643,
 						"y": 581,
 						"w": 75,
 						"h": 70
 					}
 				},
 				{
-					"filename": "Select_Close.png",
+					"filename": "Picto_Normal.png",
 					"rotated": false,
 					"trimmed": true,
 					"sourceSize": {
-						"w": 59,
-						"h": 78
+						"w": 78,
+						"h": 66
 					},
 					"spriteSourceSize": {
 						"x": 0,
-						"y": 12,
-						"w": 59,
-						"h": 66
+						"y": 2,
+						"w": 75,
+						"h": 64
 					},
 					"frame": {
 						"x": 1566,
-						"y": 612,
-						"w": 59,
-						"h": 66
-					}
-				},
-				{
-					"filename": "ValeurDice_5.png",
-					"rotated": false,
-					"trimmed": true,
-					"sourceSize": {
-						"w": 100,
-						"h": 100
-					},
-					"spriteSourceSize": {
-						"x": 13,
-						"y": 14,
-						"w": 74,
-						"h": 72
-					},
-					"frame": {
-						"x": 1543,
-						"y": 680,
-						"w": 74,
-						"h": 72
+						"y": 605,
+						"w": 75,
+						"h": 64
 					}
 				},
 				{
@@ -655,7 +634,7 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 754,
+						"y": 671,
 						"w": 74,
 						"h": 68
 					}
@@ -676,9 +655,30 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 824,
+						"y": 741,
 						"w": 66,
 						"h": 66
+					}
+				},
+				{
+					"filename": "Picto_Suspicious.png",
+					"rotated": false,
+					"trimmed": true,
+					"sourceSize": {
+						"w": 78,
+						"h": 65
+					},
+					"spriteSourceSize": {
+						"x": 3,
+						"y": 5,
+						"w": 73,
+						"h": 54
+					},
+					"frame": {
+						"x": 1543,
+						"y": 809,
+						"w": 73,
+						"h": 54
 					}
 				},
 				{
@@ -697,7 +697,7 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 892,
+						"y": 865,
 						"w": 53,
 						"h": 66
 					}
@@ -718,7 +718,7 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 960,
+						"y": 933,
 						"w": 56,
 						"h": 52
 					}
@@ -760,7 +760,7 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 1014,
+						"y": 987,
 						"w": 46,
 						"h": 41
 					}
@@ -781,7 +781,7 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 1057,
+						"y": 1030,
 						"w": 47,
 						"h": 37
 					}
@@ -802,7 +802,7 @@
 					},
 					"frame": {
 						"x": 1543,
-						"y": 1096,
+						"y": 1069,
 						"w": 41,
 						"h": 40
 					}
@@ -822,7 +822,7 @@
 						"h": 17
 					},
 					"frame": {
-						"x": 1627,
+						"x": 1643,
 						"y": 653,
 						"w": 52,
 						"h": 17
@@ -843,8 +843,8 @@
 						"h": 20
 					},
 					"frame": {
-						"x": 1518,
-						"y": 1227,
+						"x": 1619,
+						"y": 671,
 						"w": 22,
 						"h": 20
 					}
@@ -855,6 +855,6 @@
 	"meta": {
 		"app": "https://www.codeandweb.com/texturepacker",
 		"version": "3.0",
-		"smartupdate": "$TexturePacker:SmartUpdate:2b410e8c5230413c1af6c6b8486caa64:87b03789ecf8116402d01a97deeacd7a:d9f7735decdafb3044034a0581151636$"
+		"smartupdate": "$TexturePacker:SmartUpdate:e639729df2237eee29577284aeed8914:c6aab53d835232a2c230a061e80a5dd0:d9f7735decdafb3044034a0581151636$"
 	}
 }
