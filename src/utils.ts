@@ -6,7 +6,7 @@ export const ilerp = (a: number, b: number, v: number) => (v - a) / (b - a);
 
 export const logToDiscord = (content: string) => {
     if (Config.discordWebhook === "") {
-        console.log("no webhook url");
+        // console.log("no webhook url");
         return;
     }
 

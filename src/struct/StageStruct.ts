@@ -53,17 +53,17 @@ export class StageStruct {
 
     setupLocks() {
         const locksCount = Config.locksPerStage + this._level;
-        const questsPerLock = Math.min(Config.questsPerLock + this._level, Config.maxQuestsPerLock);
+        const questsPerLock = clamp(0, Config.maxQuestsPerLock, Config.questsPerLock + this._level);
 
         // Add the progress locks
-        if (locksCount > 1) {
+        if (locksCount > 0) {
             const step = Math.floor(this._total / locksCount);
             for (let i = 1; i < locksCount; i++)
                 this._locks.push(new StageLockStruct(questsPerLock, step * i));
-        }
 
-        // Add the last lock
-        this._locks.push(new StageLockStruct(questsPerLock, this._total));
+            // Add the last lock
+            this._locks.push(new StageLockStruct(questsPerLock, this._total));
+        }
     }
 
     public isLockedAndMaxed() {

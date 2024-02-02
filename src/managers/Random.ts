@@ -18,6 +18,7 @@ export class Random {
 
 	public setSeed(seed: string) {
 		this.rnd.init([seed]);
+		// this.rnd.sow([seed]);
 	}
 
 	public sign(unseeded: boolean = false) {

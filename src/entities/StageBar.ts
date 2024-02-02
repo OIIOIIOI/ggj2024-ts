@@ -1,5 +1,6 @@
 import { Colors, Config, Fonts } from "../config";
 import { EventManager, Events } from "../managers/Events";
+import { Game } from "../scenes/Game";
 import { StageStruct } from "../struct/StageStruct";
 import { clamp, ilerp, lerp } from "../utils";
 import { StageBarIcon } from "./StageBarIcon";
@@ -25,10 +26,10 @@ export class StageBar extends Phaser.GameObjects.Container {
     public get score() { return this._totalScore; }
 
     private _boundOnMainQuestProgress: ((value: number) => void) | undefined;
-    private _boundOnQuestCompleted: (() => void) | undefined;
+    private _boundOnRequirementCompleted: ((uuid: string) => void) | undefined;
     private _boundOnVibrateLock: (() => void) | undefined;
 
-    constructor(scene: Phaser.Scene) {
+    constructor(scene: Game) {
         super(scene);
 
         // Base graphics
@@ -72,16 +73,17 @@ export class StageBar extends Phaser.GameObjects.Container {
 
         // Listen to quest events
         this._boundOnMainQuestProgress = this.onMainQuestProgress.bind(this);
-        this._boundOnQuestCompleted = this.onQuestCompleted.bind(this);
+        this._boundOnRequirementCompleted = this.onRequirementCompleted.bind(this);
         this._boundOnVibrateLock = this.onVibrateLock.bind(this);
         EventManager.on(Events.MAIN_QUEST_PROGRESS, this._boundOnMainQuestProgress);
-        EventManager.on(Events.QUEST_COMPLETED, this._boundOnQuestCompleted);
+        // EventManager.on(Events.QUEST_COMPLETED, this._boundOnQuestCompleted);
+        EventManager.on(Events.REQUIREMENT_COMPLETED, this._boundOnRequirementCompleted);
         // Listen to lock event
         EventManager.on(Events.VIBRATE_LOCK, this._boundOnVibrateLock);
     }
 
     resetGraphics() {
-        const size = Config.stageBar.width * clamp(0.6, 1, 0.6 + 0.1 * this._stageLevel);
+        const size = Config.stageBar.width * clamp(0.4, 1, 0.4 + 0.1 * this._stageLevel);
 
         // Update stage name
         if (this._nameText)
@@ -163,7 +165,12 @@ export class StageBar extends Phaser.GameObjects.Container {
         }
     }
 
-    onQuestCompleted() {
+    onRequirementCompleted(uuid: string) {
+        // If requirement is from main quest, don't count it
+        const mainQuestCard = (this.scene as Game).mainQuestCard;
+        if (mainQuestCard?.hasRequirement(uuid))
+            return;
+
         const wasComplete = this._stage.isComplete;
         const lockStruct = this._stage.decrementLock();
 
@@ -196,7 +203,7 @@ export class StageBar extends Phaser.GameObjects.Container {
 
     destroy(fromScene?: boolean | undefined) {
         EventManager.off(Events.MAIN_QUEST_PROGRESS, this._boundOnMainQuestProgress);
-        EventManager.off(Events.QUEST_COMPLETED, this._boundOnQuestCompleted);
+        EventManager.off(Events.REQUIREMENT_COMPLETED, this._boundOnRequirementCompleted);
         EventManager.off(Events.VIBRATE_LOCK, this._boundOnVibrateLock);
 
         super.destroy();

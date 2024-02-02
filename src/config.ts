@@ -13,13 +13,13 @@ export class Config {
     static diceRotationRandom: number = 0.05;
     static dicePositionRandom: number = 5;
 
-    static mainQuestTurns: number = import.meta.env.PROD ? 30 : 3;//30?
+    static mainQuestTurns: number = import.meta.env.PROD ? 30 : 3;//30
     static startingStageLevel: number = 0;// Should be 0 unless testing something
-    static stageBaseDifficulty: number = 10;
+    static stageBaseDifficulty: number = 10;//10
     static maxVisibleQuests: number = 3;
     static locksPerStage: number = 0;// NOTE will be added to stage level
-    static questsPerLock: number = 0;// NOTE will be added to stage level
-    static maxQuestsPerLock: number = 3;
+    static questsPerLock: number = 1;// NOTE will be added to stage level
+    static maxQuestsPerLock: number = 6;
 
     static discordWebhook: string = import.meta.env.VITE_DISCORD_WEBHOOK || "";
 }

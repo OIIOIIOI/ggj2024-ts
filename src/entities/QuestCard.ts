@@ -171,6 +171,10 @@ export class QuestCard extends Phaser.GameObjects.Container {
         }
     }
 
+    hasRequirement(uuid: string): boolean {
+        return this.quest.isOwnRequirement(uuid);
+    }
+
     activate(primed: boolean = false) {
         // console.log('Activating quest', this._quest.uuid);
 

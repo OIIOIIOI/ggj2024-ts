@@ -25,7 +25,7 @@ export class Game extends Scene {
     static uuid: string = '';
     static score: number = 0;
     static preventAllInteractions: boolean = true;
-    static firstTimeUsedDice = 0;
+    // static firstTimeUsedDice = 0;
 
     // Entities
     private _chars: Array<Char> = [];
@@ -37,6 +37,7 @@ export class Game extends Scene {
     private _curtains: Curtains | undefined;
 
     // Data
+    private _hasCompletedFirstStage: boolean = false;
     private _isGameOver: boolean = false;
     private _mainQuestCard: MainQuestCard | undefined;
     public get mainQuestCard() { return this._mainQuestCard; }
@@ -84,9 +85,16 @@ export class Game extends Scene {
     preload() { }
 
     create() {
+        // Seed the randomizer
+        let seed = Random.getInstance().uuid(true);
+        /* if (!import.meta.env.PROD)
+            seed = '5ed7f93e-0800-4f7d-bd9d-6c466180feb4'; */
+        Random.getInstance().setSeed(seed);
+
         Game.score = 0;
         Game.preventAllInteractions = true;
 
+        this._hasCompletedFirstStage = false;
         this._isGameOver = false;
         this._questUUIDHistory = new Map();
 
@@ -100,8 +108,6 @@ export class Game extends Scene {
             .setOrigin(0, 0)
             .removeFromDisplayList();
 
-        // Seed the randomizer
-        // Random.getInstance().setSeed('make me laugh');
 
         // Setup rewards manager
         Rewards.getInstance().setup(this);
@@ -224,10 +230,10 @@ export class Game extends Scene {
         EventManager.on(Events.REQUIREMENT_COMPLETED, this._boundOnDiceUsed);
 
         // Listen to main quest progress if needed
-        if (Game.firstTimeUsedDice > 0) {
+        /* if (Game.firstTimeUsedDice > 0) {
             this._boundOnMainQuestProgress = this.onMainQuestProgress.bind(this);
             EventManager.on(Events.MAIN_QUEST_PROGRESS, this._boundOnMainQuestProgress);
-        }
+        } */
 
         // Listen to stage complete event
         this._boundOnStageCompleted = this.onStageCompleted.bind(this);
@@ -254,7 +260,7 @@ export class Game extends Scene {
 
         // Log start
         Game.uuid = this._mainQuestCard.quest.uuid;
-        logToDiscord(`Starting new game! (${Game.uuid})`);
+        logToDiscord(`**Starting new game** with seed \`${seed}\``);
 
         // Place button
         this._useAllDiceButton.setPosition(this._mainQuestCard.x, this._mainQuestCard.y + 210 * Config.DPR);
@@ -263,14 +269,14 @@ export class Game extends Scene {
         this._mainQuestCard.activate(true);
 
         // Activate first quest if player has already played
-        if (Game.firstTimeUsedDice <= 0)
-            this.activateNextQuest(true);
+        // if (Game.firstTimeUsedDice <= 0)
+        // this.activateNextQuest(true);
 
         // Throw and show
         this.throwAllDice();
     }
 
-    private onMainQuestProgress() {
+    /* private onMainQuestProgress() {
         Game.firstTimeUsedDice--;
 
         if (Game.firstTimeUsedDice === 0) {
@@ -278,7 +284,7 @@ export class Game extends Scene {
             // Activate first quest
             this.activateNextQuest();
         }
-    }
+    } */
 
     private endTurn() {
         EventManager.emit(Events.END_TURN);
@@ -584,7 +590,12 @@ export class Game extends Scene {
     }
 
     private onStageCompleted() {
-        this.throwAllDice();
+        if (!this._hasCompletedFirstStage) {
+            this._hasCompletedFirstStage = true;
+            this.activateNextQuest();
+        }
+
+        // this.throwAllDice();// TODO Maybe uncomment that once transitions are implemented
 
         this._stageBar?.startNextStage();
     }

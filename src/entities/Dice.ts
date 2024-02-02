@@ -61,11 +61,11 @@ export class Dice extends Phaser.GameObjects.Container {
             this.scene,
             0, 0,
             'ui',
-            Random.getInstance().pick(frames),
+            Random.getInstance().pick(frames, true),
         )
             .setOrigin(0.5, 0.5)
-            .setScale(Random.getInstance().sign(), Random.getInstance().sign())
-            .setRotation(Random.getInstance().integerInRange(0, 3) * Math.PI);
+            .setScale(Random.getInstance().sign(true), Random.getInstance().sign(true))
+            .setRotation(Random.getInstance().integerInRange(0, 3, true) * Math.PI);
 
         // Dots
 
@@ -76,8 +76,8 @@ export class Dice extends Phaser.GameObjects.Container {
             `ValeurDice_${this._dice.currentValue}.png`,
         )
             .setOrigin(0.5, 0.5)
-            .setScale(Random.getInstance().sign(), Random.getInstance().sign())
-            .setRotation(Random.getInstance().integerInRange(0, 3) * Math.PI);
+            .setScale(Random.getInstance().sign(true), Random.getInstance().sign(true))
+            .setRotation(Random.getInstance().integerInRange(0, 3, true) * Math.PI);
 
         this.add([
             this._background,
@@ -217,7 +217,7 @@ export class Dice extends Phaser.GameObjects.Container {
             });
         }
         else {
-            // Is main quest is not accepting dice, vibrate lock
+            // If main quest is not accepting dice, vibrate lock
             if (!isDiceValidForSlot && slot.belongsToMainQuest)
                 EventManager.emit(Events.VIBRATE_LOCK);
 

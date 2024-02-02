@@ -48,9 +48,9 @@ export class Audience extends Phaser.GameObjects.Container {
                     -Config.screen.width * 0.5 + x * memberSpacing + offset,
                     posY,
                     'scene',
-                    Random.getInstance().pick(frames),
+                    Random.getInstance().pick(frames, true),
                 )
-                    .setScale(Random.getInstance().sign(), 1)
+                    .setScale(Random.getInstance().sign(true), 1)
                     .setTintFill(color.color)
                     .setOrigin(0.5, 1);
                 this._members[y].push(m);
