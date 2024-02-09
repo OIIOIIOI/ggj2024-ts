@@ -87,8 +87,8 @@ export class Game extends Scene {
     create() {
         // Seed the randomizer
         let seed = Random.getInstance().uuid(true);
-        /* if (!import.meta.env.PROD)
-            seed = '5ed7f93e-0800-4f7d-bd9d-6c466180feb4'; */
+        if (!import.meta.env.PROD)
+            seed = '47e90ca0-6260-4948-b655-9b504e562a0f';
         Random.getInstance().setSeed(seed);
 
         Game.score = 0;
@@ -276,16 +276,6 @@ export class Game extends Scene {
         this.throwAllDice();
     }
 
-    /* private onMainQuestProgress() {
-        Game.firstTimeUsedDice--;
-
-        if (Game.firstTimeUsedDice === 0) {
-            EventManager.off(Events.MAIN_QUEST_PROGRESS, this._boundOnMainQuestProgress);
-            // Activate first quest
-            this.activateNextQuest();
-        }
-    } */
-
     private endTurn() {
         EventManager.emit(Events.END_TURN);
     }
@@ -305,6 +295,8 @@ export class Game extends Scene {
     }
 
     private activateNextQuest(primed: boolean = false) {
+        console.log('ACTIVATE NEXT QUEST', primed);
+
         while (this._questCards.length < Config.maxVisibleQuests) {
             this.queueAnotherQuest();
         }
@@ -570,6 +562,8 @@ export class Game extends Scene {
 
     private deleteQuestAndActivateNext(uuid: string, success: boolean) {
         const card = this.deleteQuestCardByUUID(uuid);
+
+        console.log('deleteQuestAndActivateNext', card?.quest.uuid, card?.quest.name, '| success:', success);
 
         if (card) {
             card.isBeingDestroyed = true;

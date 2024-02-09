@@ -176,7 +176,7 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     activate(primed: boolean = false) {
-        // console.log('Activating quest', this._quest.uuid);
+        console.log('Activating quest', this._quest.uuid, this.quest.name, primed);
 
         // Activate quest
         this._quest.activate(primed);
@@ -209,6 +209,8 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     flip(instant: boolean = false) {
+        console.log('flip quest card, instant:', instant);
+
         if (instant) {
             this._facingUp = !this._facingUp;
 
@@ -245,6 +247,8 @@ export class QuestCard extends Phaser.GameObjects.Container {
     }
 
     protected onFlipComplete(card: QuestCard) {
+        console.log('onFlipComplete', card.quest.uuid, card.quest.name, '| facing up:', card._facingUp);
+
         card._facingUp = !card._facingUp;
 
         card._back?.setTintFill(0xFFFFFF);

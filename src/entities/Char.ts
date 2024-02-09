@@ -13,7 +13,9 @@ export class Char extends Phaser.GameObjects.Container {
 
     // Graphics objects
     private _prefix: string;
-    private _body: Phaser.GameObjects.Sprite;
+    private _body: Phaser.GameObjects.Sprite | undefined;
+    private _spineBody: SpineGameObject | undefined
+    private _spineContainer!: SpineContainer
 
     public diceEntities: Array<Dice> = [];
 
@@ -49,12 +51,19 @@ export class Char extends Phaser.GameObjects.Container {
             }
         })();
 
-        this._body = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'main', `${this._prefix}_Idle.png`)
-            .setOrigin(0.5, 1);
+        if (this._char.type === CharType.BARD) {
+            this._spineBody = this.scene.add.spine(0, 0, 'SPINE_BARD', 'animation', true)
+                .setScale(Config.DPR / 2);
+            this._spineContainer = this.scene.add.spineContainer(0, -20 * Config.DPR, this._spineBody);
+            this._spineContainer.add(this._spineBody);
+            this.add(this._spineContainer);
+        }
+        else {
+            this._body = new Phaser.GameObjects.Sprite(this.scene, 0, 0, 'main', `${this._prefix}_Idle.png`)
+                .setOrigin(0.5, 1);
+            this.add(this._body);
+        }
 
-        this.add([
-            this._body,
-        ]);
 
         // Add dice
         this.addDice(2);
@@ -75,7 +84,7 @@ export class Char extends Phaser.GameObjects.Container {
 
     onDicePickedUp(type: CharType) {
         if (type === this._char.type)
-            this._body.setFrame(`${this._prefix}_Select.png`);
+            this._body?.setFrame(`${this._prefix}_Select.png`);
 
         let destY = type === this._char.type ?
             this._basePosition.y - 30 * Config.DPR :
@@ -100,7 +109,7 @@ export class Char extends Phaser.GameObjects.Container {
 
     onDiceDropped(type: CharType) {
         if (type === this._char.type)
-            this._body.setFrame(`${this._prefix}_Idle.png`);
+            this._body?.setFrame(`${this._prefix}_Idle.png`);
 
         gsap.to(this, {
             y: this._basePosition.y,

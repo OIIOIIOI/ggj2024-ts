@@ -6,6 +6,7 @@ import { MainMenu } from './scenes/MainMenu';
 import { Game } from './scenes/Game';
 import { CutScene } from './scenes/CutScene';
 import { GameOver } from './scenes/GameOver';
+import 'phaser/plugins/spine4.1/dist/SpinePlugin';
 
 const config = {
   type: Phaser.WEBGL,
@@ -27,7 +28,12 @@ const config = {
     Game,
     CutScene,
     GameOver
-  ]
+  ],
+  plugins: {
+    scene: [
+      { key: 'SpinePlugin', plugin: window.SpinePlugin, mapping: 'spine' }
+    ]
+  }
 };
 
 declare var FontFaceObserver: any;

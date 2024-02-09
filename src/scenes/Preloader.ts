@@ -46,6 +46,8 @@ export class Preloader extends Scene {
         this.load.multiatlas('ui', `UI_Spritesheet@${Config.DPR}x.json`, 'assets');
         this.load.multiatlas('scene', `Scene_Spritesheet@${Config.DPR}x.json`, 'assets');
         this.load.multiatlas('screens', `Screen_Spritesheet@${Config.DPR}x.json`, 'assets');
+
+        this.load.spine('SPINE_BARD', 'Barde_Idle_test/Barde_puppet.json', 'Barde_Idle_test/Barde_puppet.atlas');
     }
 
     create() {
